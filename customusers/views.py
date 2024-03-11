@@ -20,7 +20,7 @@ def register(request):
             if form.is_valid():
                 form.save()
                 username = form.cleaned_data.get('username')
-                send_mail(username, "Hello", None, [form.cleaned_data.get('email')])
+                send_mail(username, "Hello", 'settings.EMAIL_HOST_USER', [form.cleaned_data.get('email')])
                 messages.success(request, f"{username}, your account has been created!")
                 return redirect('user-login')
         else:
