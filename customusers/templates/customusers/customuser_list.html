@@ -1,0 +1,15 @@
+{% extends 'mytube/base.html' %}
+    {% block content %}
+    <h1>Mytube home</h1>
+    {% for  recipe in recipes %}
+    <div class="card my-4" style="width: 18rem;">
+
+        <div class="card-body">
+          <h5 class="card-title">{{ recipe.title}}</h5>
+          <p class="card-text">{{ recipe.author}} | {{ recipe.updated_at|date:"d F, Y" }}</p>
+          <p class="card-text">{{ recipe.description }} </p>
+          <a href="{% url 'recipes-detail' recipe.pk %}" class="btn btn-primary"></a>
+        </div>
+      </div>
+    {% endfor %}
+    {% endblock content %}
