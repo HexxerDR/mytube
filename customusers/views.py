@@ -47,6 +47,9 @@ def user_inactive(sender, instance, **kwargs):
 
 def confirmEmail(request, verToken):
     userToActivate = CustomUser.objects.get(verToken=verToken)
-    userToActivate.is_active = True
-    userToActivate.save()
-    return redirect('mytube-base')
+    if userToActivate.is_active == False:
+        userToActivate.is_active = True
+        userToActivate.save()
+        return redirect('mytube-base')
+    if userToActivate.is_active == True:
+        return redirect('mytube-base')
