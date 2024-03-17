@@ -20,8 +20,7 @@ def register(request):
             if form.is_valid():
                 form.save()
                 username = form.cleaned_data.get('username')
-                send_mail(username, "Hello", 'settings.EMAIL_HOST_USER', [form.cleaned_data.get('email')])
-                messages.success(request, f"{username}, your account has been created!")
+                messages.success(request, f"{username}, your account has been created! An Email has been sent to you with an activation link!")
                 return redirect('user-login')
         else:
             form = forms.UserRegisterForm()
@@ -40,9 +39,14 @@ class CustomLogout(LoginRequiredMixin, auth_views.LogoutView):
     model = CustomUser
 
 @receiver(pre_save, sender=CustomUser)
-def user_nactive(sender, instance, **kwargs):
+def user_inactive(sender, instance, **kwargs):
     if instance._state.adding is True:
-        print("Creating Inactive User")
         instance.is_active = False
-    else:
-        print("Updating User Record")
+        send_mail(instance.username, "Hello, click this link to activate your account http://127.0.0.1:8000/auth/activate/{}".format(instance.verToken), 'settings.EMAIL_HOST_USER', [instance.email])
+
+
+def confirmEmail(request, verToken):
+    userToActivate = CustomUser.objects.get(verToken=verToken)
+    userToActivate.is_active = True
+    userToActivate.save()
+    return redirect('mytube-base')
