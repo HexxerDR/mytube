@@ -5,5 +5,5 @@ import uuid
 class CustomUser(AbstractUser):
     AbstractUser._meta.get_field("email")._unique = True
     AbstractUser._meta.get_field("username")._unique = True
-    verToken = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    verToken = models.TextField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     pass
