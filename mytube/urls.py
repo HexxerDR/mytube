@@ -2,11 +2,18 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.MytubeBaseView.as_view(), name="mytube-base"),
-    path("profile/<str:verToken>", views.profileView, name="mytube-userprofile"),
     path("user/", include("customusers.urls")),
-]
+    path("", include("ratingspos.urls")),
+    path("", include("ratingsneg.urls")),
+    path("", include("subscribers.urls")),
+    path("video/", include("videos.urls")),
+    path("search/", views.MyTubeSearchView, name="mytube-search"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

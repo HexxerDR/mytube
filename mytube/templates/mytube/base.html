@@ -50,6 +50,11 @@
                 <a class="nav-item nav-link" href="{% url 'user-register' %}">Register</a>
                 {% endif %}
             </div>
+            <form class="d-flex" role="search" method="POST" action="{% url 'mytube-search'%}">
+              {% csrf_token %}
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
+              <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </form>
           </nav>
         <div class="container mt-4 col-8">
           {% if messages %}

@@ -1,0 +1,46 @@
+{% extends 'mytube/base.html' %}
+
+{% block content %}
+<div class="container">
+    <video src={{ object.videoemb.url }} controls width=900 height=600>
+</div>
+<a class="btn btn-outline-info" href="{% url 'mytube-userprofile-featured' object.author.verToken %}">{{ object.author }}</a>
+
+{% if object.author != request.user%}
+    <a class="btn btn-outline-secondary" href="{% url 'uservid-subscribe' object.id object.author.verToken  %}"> Subscribe </a>
+{% endif %}
+    <a class="btn btn-outline-success" href="{% url 'video-like' object.id %}"> Like {{ object.ratingp }} </a>
+    <a class="btn btn-outline-danger" href="{% url 'video-dislike' object.id %}"> Dislike {{ object.ratingn }}</a>
+<br>
+<a>{{ object.author.subscriberstotal }} subscribers</a>
+<br>
+<br>
+{% if object.description %}
+    {{ object.description }}
+{% endif %}
+<br>
+<br>
+<br>
+{% if not video.comments.all %}
+        No comments...
+{% else %}
+    <a style="font-size: 23.0pt"> Comment section </a>
+    {% for comment in video.comments.all %}
+        <hr>
+        </br>
+        <strong> {{ comment.author}} </strong> | {{ comment.created_at|date:"d F, Y" }}
+        </br>
+        {{ comment.description }}
+        {% if comment.author == user %}
+            <div class="col-4">
+            <a class="btn btn-outline-info" href="#">Update</a>
+            <a class="btn btn-outline-danger" href="#">Delete</a>
+            </div>
+        {% elif user.is_staff %}
+            <div class="col-4">
+            <a class="btn btn-outline-danger" href="#">Delete</a>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock content %}

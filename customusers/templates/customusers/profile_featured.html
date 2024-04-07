@@ -1,0 +1,42 @@
+{% extends 'mytube/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1> {{ userToView }} </h1>
+    <a>{{ userToView }}</a> <a>|</a> <a> {{ userToView.subscriberstotal }} subscribers</a>
+    {% if userVideos %}
+        <a>| {{vidCount }} videos</a>
+    {% endif %}
+    <br><br>
+    {% if userToView != request.user %}
+        <div class="col-4"> 
+            <a class="btn btn-outline-secondary" href="{% url 'user-subscribe' userToView.verToken %}"> Subscribe </a>
+        </div>
+    {% endif %}
+    <br><br><br><br>
+    <a style="font-size: 23.0pt" href="{% url "mytube-userprofile-featured" userToView.verToken %}" class="link-dark link-offset-2 link-underline link-underline-opacity-0">Featured &nbsp; </a><a style="font-size: 23.0pt" href="{% url "mytube-userprofile-videos" userToView.verToken %}" class="link-dark link-offset-2 link-underline link-underline-opacity-0">Video &nbsp;</a>
+    <a style="font-size: 23.0pt" href="{% url "mytube-userprofile-playlists" userToView.verToken %}" class="link-dark link-offset-2 link-underline link-underline-opacity-0">Playlists &nbsp;</a><a style="font-size: 23.0pt" href="{% url "mytube-userprofile-community" userToView.verToken %}" class="link-dark link-offset-2 link-underline link-underline-opacity-0">Community</a>
+    <hr/>
+    {% if pinnedVideo %}
+    <br><br>
+        <div class="video pe-5" align="center" style=" float: left; padding-left: 1em">              
+            <a class="link-dark link-offset-2 link-underline link-underline-opacity-0"><video src={{ pinnedVideo.pinned_video.videoemb.url }} controls width=360 height=205>
+        </div>
+        <div class="ms-5">
+            <h3 class="link-dark link-offset-2 link-underline link-underline-opacity-0 text-start" > {{ pinnedVideo.pinned_video.title }} </h3>
+            {% if pinnedVideo.pinned_video.description %}
+                <a class="link-dark link-offset-2 link-underline link-underline-opacity-0" align=left> {{ pinnedVideo.pinned_video.description }} </a>
+            {% endif %}
+        </div>
+    <br><br><br><br><br><br><br><hr/><br><br>
+    {% endif %}
+    {% if userVideos %}
+        {% for vid in userVideos|slice:":3" %}
+            <div class="img p-3" align="left" style=" float: left;">
+                <a href="{% url 'video-view' vid.pk %} "class="link-dark link-offset-2 link-underline link-underline-opacity-0"><img src="{{ vid.thumbnail.url }}" width=360 height=205>
+                <p class="text-center link-dark link-offset-2 link-underline link-underline-opacity-0 text-truncate" style="max-width: 360px;" align=center> {{ vid.title }} </p>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock content %}

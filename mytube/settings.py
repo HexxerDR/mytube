@@ -49,6 +49,11 @@ INSTALLED_APPS = [
     "customusers",
     "mytube",
     "videos",
+    "comments",
+    "ratingsneg",
+    "ratingspos",
+    "subscribers",
+    "pinnedvideos",
 
 ]
 
@@ -91,7 +96,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mytubedb',
         'USER': 'postgres',
-        'PASSWORD': 'zaq1xsw2',
+        'PASSWORD': os.getenv("PASSWORD"),
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -134,6 +139,10 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+MEDIA_ROOT = "media/"
+
+MEDIA_URL = "media/"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -143,7 +152,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 LOGIN_REDIRECT_URL = "/"
 
-LOGIN_URL = "/auth/login/"
+LOGIN_URL = "/user/login/"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 

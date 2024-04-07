@@ -1,4 +1,4 @@
-from django.shortcuts import render#, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 #from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 #from django.urls import reverse_lazy
@@ -15,7 +15,10 @@ from videos.models import Video
 class MytubeBaseView(ListView):
     model = CustomUser
 
-def profileView(request, verToken):
-    userToView = CustomUser.objects.get(verToken=verToken)
-    userVideos = Video.objects.get(author=userToView)
-    return render(request, "customusers/profile.html", {"userToView":userToView, "userVideos":userVideos})
+def MyTubeSearchView(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        searchedvid = Video.objects.filter(title__contains=searched)
+        return render(request, "mytube/search.html", {'searched': searched, 'searchedvid': searchedvid})
+    else:
+        return render(request, "mytube/search.html", {})
