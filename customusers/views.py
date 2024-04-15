@@ -9,6 +9,7 @@ from django.views.generic import DetailView
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from videos.models import Video
+from pinnedvideos.models import PinnedVideo
 
 from . import forms
 
@@ -56,10 +57,48 @@ def confirmEmail(request, verToken):
     if userToActivate.is_active == True:
         return redirect('mytube-base')
 
-def profileView(request, verToken):
+def profileVideoView(request, verToken):
     userToView = CustomUser.objects.get(verToken=verToken)
+    
     if Video.objects.filter(author=userToView).exists():
-        userVideos = Video.objects.get(author=userToView)
-        return render(request, "customusers/profile.html", {"userToView":userToView, "userVideos":userVideos})
+        userVideos = Video.objects.filter(author=userToView)
+        vidCount = userVideos.count
+        return render(request, "customusers/profile_videos.html", {"userToView":userToView, "userVideos":userVideos, "vidCount":vidCount})
     else:
-        return render(request, "customusers/profile.html", {"userToView":userToView})
+        return render(request, "customusers/profile_videos.html", {"userToView":userToView})
+    
+def profileCommView(request, verToken):
+    userToView = CustomUser.objects.get(verToken=verToken)
+    
+    if Video.objects.filter(author=userToView).exists():
+        userVideos = Video.objects.filter(author=userToView)
+        vidCount = userVideos.count
+        return render(request, "customusers/profile_community.html", {"userToView":userToView, "userVideos":userVideos, "vidCount":vidCount})
+    else:
+        return render(request, "customusers/profile_community.html", {"userToView":userToView})
+
+def profileFeatView(request, verToken):
+    userToView = CustomUser.objects.get(verToken=verToken)
+    
+    if Video.objects.filter(author=userToView).exists() and PinnedVideo.objects.filter(pinning_user=userToView):
+        userVideos = Video.objects.filter(author=userToView)
+        pinnedVideo = PinnedVideo.objects.get(pinning_user=userToView)
+        vidCount = userVideos.count
+        return render(request, "customusers/profile_featured.html", {"userToView":userToView, "userVideos":userVideos, "vidCount":vidCount, "pinnedVideo":pinnedVideo})
+    elif Video.objects.filter(author=userToView).exists():
+        userVideos = Video.objects.filter(author=userToView)
+        vidCount = userVideos.count
+        return render(request, "customusers/profile_featured.html", {"userToView":userToView, "userVideos":userVideos, "vidCount":vidCount})
+    else:
+        return render(request, "customusers/profile_featured.html", {"userToView":userToView})
+
+def profilePlaylView(request, verToken):
+    userToView = CustomUser.objects.get(verToken=verToken)
+    
+    if Video.objects.filter(author=userToView).exists():
+        userVideos = Video.objects.filter(author=userToView)
+        vidCount = userVideos.count
+        return render(request, "customusers/profile_playlists.html", {"userToView":userToView, "userVideos":userVideos, "vidCount":vidCount})
+    else:
+        return render(request, "customusers/profile_playlists.html", {"userToView":userToView})
+
